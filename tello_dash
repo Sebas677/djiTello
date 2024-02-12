@@ -1,0 +1,110 @@
+from djitellopy import Tello
+import time
+tello = Tello()
+import cv2 
+import numpy as np
+import random as rng
+import tkinter as tk
+tello.connect()
+tello.streamon()
+speed=50
+
+# Declare the width and height in variables
+width, height = 500, 600
+
+img= tello.get_frame_read().frame
+img= cv2.resize(img,(width,height))
+
+def open_camera():
+	# Capture the video frame by frame
+	#_, frame = vid.read()
+	
+    frame= tello.get_frame_read().frame
+    frame=cv2.resize(frame,(400,200))
+
+	# Convert image from one color space to other
+    opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+
+	# Capture the latest frame and transform to image
+    captured_image = Image.fromarray(opencv_image)
+
+	# Convert captured image to photoimage
+    photo_image = ImageTk.PhotoImage(image=captured_image)
+
+	# Displaying photoimage in the label
+    label_widget.photo_image = photo_image
+
+	# Configure image in the label
+    label_widget.configure(image=photo_image)
+
+	# Repeat the same process after every 10 seconds
+    label_widget.after(10, open_camera)
+
+
+def left():
+    print("moves left")
+    tello.move_left(50)
+    time.sleep(3)  # Move for 3 seconds
+
+def back():
+    print("moves back")
+    tello.move_back(50)
+    time.sleep(3)  # Move for 3 seconds
+
+def front():
+    print("moves front")
+    tello.move_forward(50)
+    time.sleep(3)  # Move for 3 seconds
+
+def right():
+    print("moves right")
+    tello.move_right(50)
+    time.sleep(3)  # Move for 3 seconds
+
+def up():
+    print("moves up")
+    tello.takeoff()
+    time.sleep(3)  # Move for 3 seconds
+
+def down():
+    print("moves down")
+    tello.land()
+    time.sleep(3)  # Move for 3 seconds
+
+root = tk.Tk()
+#root.geometry(str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight()))
+
+root.columnconfigure((0, 1, 2, 3, 4, 5,6,7,8,9,10), weight=1)
+root.rowconfigure((0, 1, 2, 3,4,5,6,7,8,9,10), weight=1)
+
+# Make the root window fullscreen
+#root.attributes("-fullscreen", True)
+
+# Create the parent container with pack
+#parent_container = tk.Frame(root)
+#parent_container.pack(expand=True, fill=tk.BOTH)
+
+# Create Button 1
+button1 = tk.Button(root, text="🢀", command=left)
+button1.grid(column=1, row=2)
+
+# Create Button 2
+button2 = tk.Button(root, text="🢃", command=back)
+button2.grid(column=2, row=3)
+
+# Create Button 3
+button3 = tk.Button(root, text="🢁", command=front)
+button3.grid(column=2, row=1)
+
+# Create Button 4
+button4 = tk.Button(root, text="🢂", command=right)
+button4.grid(column=3, row=2)
+
+# Create Button 5
+button5 = tk.Button(root, text="☢", command=down)
+button5.grid(column=6, row=1)
+
+# Create Button 6
+button6 = tk.Button(root, text="✿", command=up)
+button6.grid(column=6, row=3)
+root.mainloop()
